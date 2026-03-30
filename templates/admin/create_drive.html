@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Header Banner -->
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 60px 0 40px;">
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div>
+                <h1 style="color: white; font-size: 2.5rem; margin-bottom: 10px;">
+                    <i class="fas fa-calendar-plus"></i> Create Placement Drive
+                </h1>
+                <p style="color: rgba(255,255,255,0.9); font-size: 1.1rem;">Schedule new placement drives and view eligible students</p>
+            </div>
+            <div>
+                <div style="background: rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 20px;">
+                    <i class="fas fa-briefcase"></i> 
+                    <span style="color: white;">Total Drives: {{ drives|length }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" style="margin-top: -30px;">
+    <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px;">
+        <!-- Create Drive Form -->
+        <div style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <h2 style="margin-bottom: 20px; color: #3f8ea0;">
+                <i class="fas fa-edit"></i> Drive Details
+            </h2>
+            <form method="POST">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Select Company *</label>
+                    <select name="company_id" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <option value="">Select Company</option>
+                        {% for company in companies %}
+                        <option value="{{ company.id }}">{{ company.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Drive Title *</label>
+                    <input type="text" name="title" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Location</label>
+                    <input type="text" name="location" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Package (LPA)</label>
+                    <input type="text" name="package" placeholder="e.g., 12-15" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Number of Positions</label>
+                    <input type="number" name="positions" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Application Deadline *</label>
+                    <input type="datetime-local" name="application_deadline" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Drive Date</label>
+                    <input type="datetime-local" name="drive_date" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Description</label>
+                    <textarea name="description" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Requirements</label>
+                    <textarea name="requirements" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
+                </div>
+                
+                <button type="submit" style="background: linear-gradient(135deg, #54acbf, #3f8ea0); color: white; padding: 12px; width: 100%; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                    <i class="fas fa-calendar-check"></i> Create Drive
+                </button>
+            </form>
+        </div>
+        
+        <!-- Existing Drives List with Eligible Students -->
+        <div style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <h2 style="margin-bottom: 20px; color: #3f8ea0;">
+                <i class="fas fa-list"></i> Existing Drives & Eligible Students
+            </h2>
+            {% if drives %}
+                <div style="max-height: 550px; overflow-y: auto;">
+                    {% for drive in drives %}
+                    <div style="border: 1px solid #e5e7eb; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div style="flex: 1;">
+                                <h3 style="margin: 0 0 5px 0; color: #3f8ea0;">{{ drive.title }}</h3>
+                                <p style="margin: 0 0 5px 0;"><strong>Company:</strong> {{ drive.company.name }}</p>
+                                <p style="margin: 0 0 5px 0;"><strong>Package:</strong> {{ drive.package or 'Negotiable' }} LPA</p>
+                                <p style="margin: 0 0 5px 0;"><strong>Deadline:</strong> {{ drive.application_deadline.strftime('%Y-%m-%d') }}</p>
+                                <p style="margin: 0;">
+                                    <strong>Status:</strong> 
+                                    {% if drive.is_active and drive.application_deadline > now %}
+                                    <span style="color: #10b981;">✓ Active</span>
+                                    {% else %}
+                                    <span style="color: #ef4444;">✗ Expired</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="background: #54acbf; color: white; padding: 8px 15px; border-radius: 10px; margin-bottom: 10px; text-align: center;">
+                                    <i class="fas fa-users"></i><br>
+                                    <strong style="font-size: 1.2rem;">{{ drive.eligible_count }}</strong><br>
+                                    <small>Eligible Students</small>
+                                </div>
+                                <a href="/admin/drive_eligible_students/{{ drive.id }}" 
+                                   style="background: #10b981; color: white; padding: 5px 12px; border-radius: 5px; text-decoration: none; font-size: 0.75rem; display: inline-block; margin-bottom: 8px;">
+                                    <i class="fas fa-eye"></i> View List
+                                </a>
+                                <a href="/admin/delete_drive/{{ drive.id }}" 
+                                   onclick="return confirm('Are you sure you want to delete {{ drive.title }}?')"
+                                   style="background: #ef4444; color: white; padding: 5px 12px; border-radius: 5px; text-decoration: none; font-size: 0.75rem; display: inline-block;">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Progress bar for eligible students -->
+                        <div style="margin-top: 10px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span style="font-size: 0.75rem;">Eligibility Match</span>
+                                <span style="font-size: 0.75rem;">{{ drive.eligible_count }} eligible out of {{ total_students }} students</span>
+                            </div>
+                            <div style="background: #e5e7eb; border-radius: 10px; overflow: hidden;">
+                                <div style="background: #54acbf; width: {{ (drive.eligible_count / total_students * 100) if total_students > 0 else 0 }}%; height: 8px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 40px;">
+                    <i class="fas fa-calendar-alt" style="font-size: 3rem; color: #cbd5e1;"></i>
+                    <p style="margin-top: 15px;">No placement drives created yet</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    // Set default datetime values
+    document.addEventListener('DOMContentLoaded', function() {
+        const now = new Date();
+        const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+        
+        const deadlineInput = document.querySelector('input[name="application_deadline"]');
+        const driveDateInput = document.querySelector('input[name="drive_date"]');
+        
+        if (deadlineInput && !deadlineInput.value) {
+            deadlineInput.value = nextWeek.toISOString().slice(0, 16);
+        }
+        
+        if (driveDateInput && !driveDateInput.value) {
+            const driveDate = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+            driveDateInput.value = driveDate.toISOString().slice(0, 16);
+        }
+    });
+</script>
+{% endblock %}

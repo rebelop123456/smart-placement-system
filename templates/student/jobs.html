@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background: linear-gradient(135deg, #54acbf, #3f8ea0); padding: 60px 0 40px;">
+    <div class="container">
+        <h1 style="color: white; font-size: 2.5rem; margin-bottom: 10px;">🎯 Placement Opportunities</h1>
+        <p style="color: rgba(255,255,255,0.9); font-size: 1.1rem;">Find and apply for your dream job</p>
+    </div>
+</div>
+
+<div class="container" style="margin-top: -30px;">
+    <!-- Search and Filter Section -->
+    <div style="background: white; border-radius: 15px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">🔍 Search Jobs</label>
+                <input type="text" id="searchInput" placeholder="Search by company, title..." 
+                       style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px;">
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">📊 Minimum CGPA</label>
+                <select id="cgpaFilter" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px;">
+                    <option value="all">All CGPA</option>
+                    <option value="7.0">Above 7.0</option>
+                    <option value="7.5">Above 7.5</option>
+                    <option value="8.0">Above 8.0</option>
+                    <option value="8.5">Above 8.5</option>
+                </select>
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">🏢 Branch</label>
+                <select id="branchFilter" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px;">
+                    <option value="all">All Branches</option>
+                    <option value="CS">Computer Science</option>
+                    <option value="IT">Information Technology</option>
+                    <option value="ECE">Electronics & Communication</option>
+                    <option value="EE">Electrical Engineering</option>
+                    <option value="ME">Mechanical Engineering</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drives Grid -->
+    <div id="drivesContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px;">
+        {% for drive in drives %}
+        <div class="drive-card" data-cgpa="{{ drive.company.min_cgpa }}" data-branch="{{ drive.company.eligible_branches }}" 
+             data-title="{{ drive.title }}" data-company="{{ drive.company.name }}" style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.3s;">
+            <div style="background: linear-gradient(135deg, #54acbf, #3f8ea0); padding: 20px; color: white;">
+                <h3 style="margin-bottom: 5px;">{{ drive.title }}</h3>
+                <p style="opacity: 0.9;"><i class="fas fa-building"></i> {{ drive.company.name }}</p>
+            </div>
+            <div style="padding: 20px;">
+                <p><i class="fas fa-map-marker-alt" style="color: #54acbf;"></i> <strong>Location:</strong> {{ drive.location or 'Not specified' }}</p>
+                <p><i class="fas fa-rupee-sign" style="color: #54acbf;"></i> <strong>Package:</strong> {{ drive.package or 'Negotiable' }} LPA</p>
+                <p><i class="fas fa-users" style="color: #54acbf;"></i> <strong>Positions:</strong> {{ drive.positions or 'Not specified' }}</p>
+                <p><i class="fas fa-graduation-cap" style="color: #54acbf;"></i> <strong>Min CGPA:</strong> {{ drive.company.min_cgpa }}</p>
+                <p><i class="fas fa-calendar" style="color: #54acbf;"></i> <strong>Deadline:</strong> {{ drive.application_deadline.strftime('%Y-%m-%d') }}</p>
+                <div style="margin-top: 15px;">
+                    <a href="/apply/{{ drive.id }}" class="btn-primary" style="display: inline-block; background: #54acbf; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none;">Apply Now →</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    function filterDrives() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const cgpaFilter = document.getElementById('cgpaFilter').value;
+        const branchFilter = document.getElementById('branchFilter').value;
+        const cards = document.querySelectorAll('.drive-card');
+        
+        cards.forEach(card => {
+            const title = card.dataset.title?.toLowerCase() || '';
+            const company = card.dataset.company?.toLowerCase() || '';
+            const cgpa = parseFloat(card.dataset.cgpa);
+            const branches = card.dataset.branch || '';
+            
+            let show = true;
+            
+            if (searchTerm && !title.includes(searchTerm) && !company.includes(searchTerm)) {
+                show = false;
+            }
+            
+            if (cgpaFilter !== 'all' && cgpa < parseFloat(cgpaFilter)) {
+                show = false;
+            }
+            
+            if (branchFilter !== 'all' && !branches.includes(branchFilter)) {
+                show = false;
+            }
+            
+            card.style.display = show ? 'block' : 'none';
+        });
+    }
+    
+    document.getElementById('searchInput').addEventListener('keyup', filterDrives);
+    document.getElementById('cgpaFilter').addEventListener('change', filterDrives);
+    document.getElementById('branchFilter').addEventListener('change', filterDrives);
+</script>
+{% endblock %}

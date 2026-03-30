@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background: linear-gradient(135deg, #ef4444, #dc2626); padding: 60px 0 40px;">
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div>
+                <h1 style="color: white; font-size: 2.5rem; margin-bottom: 10px;">
+                    <i class="fas fa-bell"></i> Notifications
+                </h1>
+                <p style="color: rgba(255,255,255,0.9); font-size: 1.1rem;">Stay updated about your placement applications</p>
+            </div>
+            <div>
+                <div style="background: rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 20px;">
+                    <i class="fas fa-bell"></i> 
+                    <span style="color: white;">Total: {{ notifications|length }} Notifications</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" style="margin-top: -30px;">
+    <div style="background: white; border-radius: 15px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        {% if notifications %}
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                {% for notification in notifications %}
+                <div id="notification-{{ notification.id }}" 
+                     style="border-left: 4px solid {% if not notification.is_read %}#ef4444{% else %}#e5e7eb{% endif %}; 
+                            background: {% if not notification.is_read %}#fff5f5{% else %}white{% endif %}; 
+                            padding: 20px; 
+                            border-radius: 10px; 
+                            transition: all 0.3s;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 15px;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                {% if not notification.is_read %}
+                                <span style="display: inline-block; width: 10px; height: 10px; background: #ef4444; border-radius: 50%;"></span>
+                                {% endif %}
+                                <h3 style="margin: 0; color: {% if not notification.is_read %}#ef4444{% else %}#0f1a2a{% endif %};">
+                                    <i class="fas fa-{% if 'Congratulations' in notification.title %}trophy{% elif 'Eligible' in notification.title %}check-circle{% elif 'Application' in notification.title %}file-alt{% else %}bell{% endif %}" 
+                                       style="margin-right: 8px;"></i>
+                                    {{ notification.title }}
+                                </h3>
+                            </div>
+                            <p style="margin: 0 0 10px 0; color: #4a5b6e; line-height: 1.6;">
+                                {{ notification.message }}
+                            </p>
+                            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                                <small style="color: #9ca3af;">
+                                    <i class="far fa-clock"></i> 
+                                    {{ notification.created_at.strftime('%Y-%m-%d %H:%M') }}
+                                </small>
+                                {% if 'interview' in notification.message.lower() %}
+                                <span style="background: #dbeafe; color: #1e40af; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem;">
+                                    <i class="fas fa-calendar-alt"></i> Interview Scheduled
+                                </span>
+                                {% endif %}
+                                {% if 'eligible' in notification.message.lower() %}
+                                <span style="background: #d1fae5; color: #065f46; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem;">
+                                    <i class="fas fa-check-circle"></i> You are eligible
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if not notification.is_read %}
+                        <div>
+                            <a href="/mark_notification_read/{{ notification.id }}" 
+                               style="background: #54acbf; color: white; padding: 6px 15px; border-radius: 20px; text-decoration: none; font-size: 0.75rem; display: inline-block;">
+                                <i class="fas fa-check"></i> Mark as Read
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Mark All as Read Button -->
+            {% set unread_count = notifications|selectattr('is_read', 'equalto', False)|list|length %}
+            {% if unread_count > 0 %}
+            <div style="margin-top: 25px; text-align: center;">
+                <a href="/mark_all_notifications_read" 
+                   style="background: #6c757d; color: white; padding: 10px 25px; border-radius: 25px; text-decoration: none; display: inline-block;">
+                    <i class="fas fa-check-double"></i> Mark All as Read ({{ unread_count }})
+                </a>
+            </div>
+            {% endif %}
+            
+        {% else %}
+            <div style="text-align: center; padding: 80px 20px;">
+                <i class="fas fa-bell-slash" style="font-size: 4rem; color: #cbd5e1;"></i>
+                <h3 style="margin-top: 20px; color: #4a5b6e;">No notifications yet</h3>
+                <p style="color: #9ca3af; margin-top: 10px;">
+                    You'll receive notifications about:
+                </p>
+                <ul style="list-style: none; padding: 0; margin-top: 15px;">
+                    <li style="color: #6c757d; margin: 8px 0;">
+                        <i class="fas fa-check-circle" style="color: #10b981;"></i> New placement drives
+                    </li>
+                    <li style="color: #6c757d; margin: 8px 0;">
+                        <i class="fas fa-check-circle" style="color: #10b981;"></i> Eligibility confirmation
+                    </li>
+                    <li style="color: #6c757d; margin: 8px 0;">
+                        <i class="fas fa-check-circle" style="color: #10b981;"></i> Interview schedules
+                    </li>
+                    <li style="color: #6c757d; margin: 8px 0;">
+                        <i class="fas fa-check-circle" style="color: #10b981;"></i> Application updates
+                    </li>
+                </ul>
+                <a href="/student/drives" style="display: inline-block; margin-top: 25px; background: #54acbf; color: white; padding: 10px 25px; border-radius: 25px; text-decoration: none;">
+                    <i class="fas fa-briefcase"></i> Browse Placement Drives
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .notification-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+</style>
+
+<script>
+    // Auto-hide notifications after marking as read? Not needed, but we can add animation
+    document.addEventListener('DOMContentLoaded', function() {
+        const markReadLinks = document.querySelectorAll('a[href*="/mark_notification_read/"]');
+        markReadLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                const notificationDiv = this.closest('#notification-' + this.href.split('/').pop());
+                if (notificationDiv) {
+                    notificationDiv.style.opacity = '0.5';
+                    notificationDiv.style.transition = 'opacity 0.3s';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

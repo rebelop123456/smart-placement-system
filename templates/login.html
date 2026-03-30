@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .login-container {
+        min-height: calc(100vh - 300px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .login-container::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 500px;
+        height: 500px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        animation: float 8s ease-in-out infinite;
+    }
+    
+    .login-container::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -10%;
+        width: 400px;
+        height: 400px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite reverse;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-30px) rotate(5deg); }
+    }
+    
+    .login-card {
+        position: relative;
+        z-index: 2;
+        max-width: 450px;
+        width: 100%;
+        background: white;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        animation: slideUp 0.5s ease;
+    }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .login-header {
+        background: linear-gradient(135deg, #54acbf, #3f8ea0);
+        padding: 35px 30px;
+        text-align: center;
+        position: relative;
+    }
+    
+    .login-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -20%;
+        width: 200px;
+        height: 200px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+    }
+    
+    .login-header .icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        font-size: 2.5rem;
+        color: white;
+        backdrop-filter: blur(10px);
+    }
+    
+    .login-header h2 {
+        color: white;
+        font-size: 1.8rem;
+        margin-bottom: 5px;
+    }
+    
+    .login-header p {
+        color: rgba(255,255,255,0.9);
+        font-size: 0.9rem;
+    }
+    
+    .login-body {
+        padding: 35px;
+    }
+    
+    .input-group {
+        margin-bottom: 25px;
+        position: relative;
+    }
+    
+    .input-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #1e293b;
+        font-size: 0.9rem;
+    }
+    
+    .input-group .input-icon {
+        position: absolute;
+        left: 15px;
+        bottom: 12px;
+        color: #94a3b8;
+        font-size: 1rem;
+    }
+    
+    .input-group input {
+        width: 100%;
+        padding: 12px 15px 12px 45px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s;
+        background: #f8fafc;
+    }
+    
+    .input-group input:focus {
+        outline: none;
+        border-color: #54acbf;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(84, 172, 191, 0.1);
+    }
+    
+    .login-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #54acbf, #3f8ea0);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 10px;
+    }
+    
+    .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(84, 172, 191, 0.3);
+    }
+    
+    .register-link {
+        text-align: center;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #e2e8f0;
+    }
+    
+    .register-link a {
+        color: #54acbf;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .register-link a:hover {
+        text-decoration: underline;
+    }
+    
+    .role-badge {
+        display: inline-block;
+        background: #f1f5f9;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        color: #54acbf;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="icon">
+                <i class="fas {% if request.args.get('role') == 'admin' %}fa-user-tie{% else %}fa-user-graduate{% endif %}"></i>
+            </div>
+            <h2>{% if request.args.get('role') == 'admin' %}Admin Login{% else %}Student Login{% endif %}</h2>
+            <p>Welcome back! Please enter your credentials</p>
+            <div class="role-badge">
+                <i class="fas fa-{% if request.args.get('role') == 'admin' %}shield-alt{% else %}graduation-cap{% endif %}"></i>
+                {% if request.args.get('role') == 'admin' %}Administrator Access{% else %}Student Portal{% endif %}
+            </div>
+        </div>
+        
+        <div class="login-body">
+            <form method="POST">
+                <div class="input-group">
+                    <label><i class="fas fa-envelope"></i> Email Address</label>
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" name="email" required placeholder="Enter your email">
+                </div>
+                
+                <div class="input-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" name="password" required placeholder="Enter your password">
+                </div>
+                
+                <input type="hidden" name="role" value="{{ request.args.get('role', 'student') }}">
+                
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            
+            <div class="register-link">
+                <p>Don't have an account? 
+                    <a href="/register?role={{ request.args.get('role', 'student') }}">
+                        Register here <i class="fas fa-arrow-right"></i>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

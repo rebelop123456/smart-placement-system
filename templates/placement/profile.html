@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: calc(100vh - 200px); padding: 60px 0;">
+    <div class="container">
+        <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #54acbf, #3f8ea0); padding: 30px; color: white;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <i class="fas fa-user-circle" style="font-size: 3rem;"></i>
+                    <div>
+                        <h2 style="margin: 0;">Complete Your Profile</h2>
+                        <p style="margin: 5px 0 0; opacity: 0.9;">Fill all details to unlock placement opportunities</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Form -->
+            <form method="POST" enctype="multipart/form-data" style="padding: 40px;">
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px;">
+                    
+                    <!-- Left Column -->
+                    <div>
+                        <h3 style="margin-bottom: 20px; color: #0f1a2a; border-bottom: 2px solid #54acbf; display: inline-block;">
+                            <i class="fas fa-user"></i> Personal Information
+                        </h3>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #0f1a2a;">
+                                Full Name <span style="color: #ef4444;">*</span>
+                            </label>
+                            <div style="position: relative;">
+                                <i class="fas fa-user" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
+                                <input type="text" name="full_name" value="{{ profile.full_name }}" required
+                                       style="width: 100%; padding: 12px 12px 12px 40px; border: 2px solid #e5e7eb; border-radius: 10px;">
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #0f1a2a;">
+                                Roll Number <span style="color: #ef4444;">*</span>
+                            </label>
+                            <div style="position: relative;">
+                                <i class="fas fa-id-card" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
+                                <input type="text" name="roll_number" value="{{ profile.roll_number }}" required
+                                       style="width: 100%; padding: 12px 12px 12px 40px; border: 2px solid #e5e7eb; border-radius: 10px;">
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #0f1a2a;">
+                                Course <span style="color: #ef4444;">*</span>
+                            </label>
+                            <div style="position: relative;">
+                                <i class="fas fa-graduation-cap" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
+                                <select name="course" required style="width: 100%; padding: 12px 12px 12px 40px; border: 2px solid #e5e7eb; border-radius: 10px;">
+                                    <option value="">Select Course</option>
+                                    <option value="BTECH" {% if profile.course == 'BTECH' %}selected{% endif %}>B.Tech - Bachelor of Technology</option>
+                                    <option value="BE" {% if profile.course == 'BE' %}selected{% endif %}>B.E - Bachelor of Engineering</option>
+                                    <option value="BCA" {% if profile.course == 'BCA' %}selected{% endif %}>BCA - Bachelor of Computer Applications</option>
+                                    <option value="MCA" {% if profile.course == 'MCA' %}selected{% endif %}>MCA - Master of Computer Applications</option>
+                                    <option value="MBA" {% if profile.course == 'MBA' %}selected{% endif %}>MBA - Master of Business Administration</option>
+                                    <option value="BSC" {% if profile.course == 'BSC' %}selected{% endif %}>B.Sc - Bachelor of Science</option>
+                                    <option value="MSC" {% if profile.course == 'MSC' %}selected{% endif %}>M.Sc - Master of Science</option>
+                                    <option value="BBA" {% if profile.course == 'BBA' %}selected{% endif %}>BBA - Bachelor of Business Administration</option>
+                                    <option value="BCOM" {% if profile.course == 'BCOM' %}selected{% endif %}>B.Com - Bachelor of Commerce</option>
+                                    <option value="MCOM" {% if profile.course == 'MCOM' %}selected{% endif %}>M.Com - Master of Commerce</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #0f1a2a;">
+                                Branch / Specialization <span style="color: #ef4444;">*</span>
+                            </label>
+                            <div style="position: relative;">
+                                <i class="fas fa-code-branch" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
+                                <select name="branch" required style="width: 100%; padding: 12px 12px 12px 40px; border: 2px solid #e5e7eb; border-radius: 10px;">
+                                    <option value="">Select Branch</option>
+                                    <option value="CS" {% if profile.branch == 'CS' %}selected{% endif %}>Computer Science Engineering</option>
+                                    <option value="IT" {% if profile.branch == 'IT' %}selected{% endif %}>Information Technology</option>
+                                    <option value="ECE" {% if profile.branch == 'ECE' %}selected{% endif %}>Electronics & Communication</option>
+                                    <option value="EE" {% if profile.branch == 'EE' %}selected{% endif %}>Electrical Engineering</option>
+                                    <option value="ME" {% if profile.branch == 'ME' %}selected{% endif %}>Mechanical Engineering</option>
+                                    <option value="CE" {% if profile.branch == 'CE' %}selected{% endif %}>Civil Engineering</option>
+                                    <option value="AI" {% if profile.branch == 'AI' %}selected{% endif %}>Artificial Intelligence</option>
+                                    <option value="DS" {% if profile.branch == 'DS' %}selected{% endif %}>Data Science</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div style="margin-bottom: 20px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #0f1a2a;">
+                                    CGPA <span style="color: #ef4444;">*</span>
+                                </label>
+                                <div style="position: relative;">
+                                    <i class="fas fa-chart-line" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
+                                    <input type="number" step="0.01" name="cgpa" value="{{ profile.cgpa }}" required
+                                           style="width: 100%; padding: 12px 12px 12px 40px; border: 2px solid #e5e7eb; border-radius: 10px;">
+                                </div>
+                            </div>
+                            
+                            <div style="margin-bottom: 20px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #0f1a2a;">
+                                    Graduation Year <span style="color: #ef4444;">*</span>
+                                </label>
+                                <div style="position: relative;">
+                                    <i class="fas fa-calendar" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
+                                    <select name="graduation_year" required style="width: 100%; padding: 12px 12px 12px 40px; border: 2px solid #e5e7eb; border-radius: 10px;">
+                                        <option value="">Select Year</option>
+                                        {% for year in range(2024, 2031) %}
+                                        <option value="{{ year }}" {% if profile.graduation_year == year %}selected{% endif %}>{{ year }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #0f1a2a;">
+                                Phone Number <span style="color: #ef4444;">*</span>
+                            </label>
+                            <div style="position: relative;">
+                                <i class="fas fa-phone" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
+                                <input type="tel" name="phone" value="{{ profile.phone }}" required
+                                       pattern="[0-9]{10}" title="Enter a valid 10-digit mobile number"
+                                       style="width: 100%; padding: 12px 12px 12px 40px; border: 2px solid #e5e7eb; border-radius: 10px;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column -->
+                    <div>
+                        <h3 style="margin-bottom: 20px; color: #0f1a2a; border-bottom: 2px solid #54acbf; display: inline-block;">
+                            <i class="fas fa-code"></i> Skills & Professional Links
+                        </h3>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #0f1a2a;">
+                                Skills <span style="color: #ef4444;">*</span>
+                            </label>
+                            <textarea name="skills" rows="4" placeholder="Python, Java, SQL, React, Machine Learning, etc. (separate with commas)"
+                                      style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; resize: vertical;">{{ profile.skills }}</textarea>
+                            <small style="color: #6c757d; display: block; margin-top: 5px;">
+                                <i class="fas fa-info-circle"></i> Add your key skills separated by commas
+                            </small>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #0f1a2a;">
+                                <i class="fab fa-github"></i> GitHub Profile
+                            </label>
+                            <div style="position: relative;">
+                                <i class="fab fa-github" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
+                                <input type="url" name="github" value="{{ profile.github }}" 
+                                       placeholder="https://github.com/username"
+                                       style="width: 100%; padding: 12px 12px 12px 40px; border: 2px solid #e5e7eb; border-radius: 10px;">
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #0f1a2a;">
+                                <i class="fab fa-linkedin"></i> LinkedIn Profile
+                            </label>
+                            <div style="position: relative;">
+                                <i class="fab fa-linkedin" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
+                                <input type="url" name="linkedin" value="{{ profile.linkedin }}" 
+                                       placeholder="https://linkedin.com/in/username"
+                                       style="width: 100%; padding: 12px 12px 12px 40px; border: 2px solid #e5e7eb; border-radius: 10px;">
+                            </div>
+                        </div>
+                        
+                        <h3 style="margin: 30px 0 20px 0; color: #0f1a2a; border-bottom: 2px solid #54acbf; display: inline-block;">
+                            <i class="fas fa-file-alt"></i> Resume Upload
+                        </h3>
+                        
+                        <div style="border: 2px dashed #e5e7eb; border-radius: 15px; padding: 30px; text-align: center; background: #fafafa;">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: #54acbf; margin-bottom: 15px;"></i>
+                            <p style="margin-bottom: 10px; color: #0f1a2a;">
+                                <strong>Upload your resume</strong>
+                            </p>
+                            <p style="margin-bottom: 15px; font-size: 0.875rem; color: #6c757d;">
+                                PDF or DOC format (Max 16MB)
+                            </p>
+                            <input type="file" name="resume" accept=".pdf,.doc,.docx" id="resumeUpload"
+                                   style="display: none;">
+                            <button type="button" onclick="document.getElementById('resumeUpload').click()"
+                                    style="background: #54acbf; color: white; padding: 10px 25px; border: none; border-radius: 25px; cursor: pointer;">
+                                <i class="fas fa-upload"></i> Choose File
+                            </button>
+                            {% if profile.resume_path %}
+                            <div style="margin-top: 15px; padding: 10px; background: #d1fae5; border-radius: 10px; color: #065f46;">
+                                <i class="fas fa-check-circle"></i> Current: {{ profile.resume_path.split('/')[-1] }}
+                            </div>
+                            {% endif %}
+                            <div id="fileNameDisplay" style="margin-top: 10px; font-size: 0.875rem; color: #6c757d;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Profile Completion Status -->
+                <div style="margin: 30px 0; padding: 20px; background: #f8fafc; border-radius: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                        <div>
+                            <h4 style="margin: 0; color: #0f1a2a;">Profile Completion Status</h4>
+                            <p style="margin: 5px 0 0; color: #6c757d;">Complete all fields to become eligible for placements</p>
+                        </div>
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div style="width: 200px; background: #e5e7eb; border-radius: 10px; overflow: hidden;">
+                                    <div style="width: {{ completion }}%; background: #54acbf; height: 10px;"></div>
+                                </div>
+                                <strong style="color: #54acbf;">{{ completion }}% Complete</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div style="display: flex; gap: 15px; margin-top: 30px;">
+                    <button type="submit" style="flex: 1; background: linear-gradient(135deg, #54acbf, #3f8ea0); color: white; padding: 14px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                        <i class="fas fa-save"></i> Save Profile
+                    </button>
+                    <a href="/student/dashboard" style="flex: 1; background: #f3f4f6; color: #4a5b6e; padding: 14px; border: none; border-radius: 10px; text-align: center; text-decoration: none; font-weight: 600;">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('resumeUpload').addEventListener('change', function(e) {
+        const fileName = this.files[0]?.name;
+        const displayDiv = document.getElementById('fileNameDisplay');
+        if (fileName) {
+            displayDiv.innerHTML = '<i class="fas fa-file"></i> Selected: ' + fileName;
+            displayDiv.style.color = '#54acbf';
+        } else {
+            displayDiv.innerHTML = '';
+        }
+    });
+    
+    document.querySelector('input[name="phone"]').addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
+    });
+</script>
+{% endblock %}
